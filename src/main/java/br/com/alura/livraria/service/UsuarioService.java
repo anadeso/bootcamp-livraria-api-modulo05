@@ -6,6 +6,8 @@ import br.com.alura.livraria.entities.Usuario;
 import br.com.alura.livraria.repositories.UsuarioRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +22,12 @@ public class UsuarioService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Transactional(readOnly = true)
+    public Page<UsuarioDto> listar(Pageable paginacao) {
+        Page<Usuario> usuarios = usuarioRepository.findAll(paginacao);
+        return usuarios.map(x -> modelMapper.map(x, UsuarioDto.class));
+    }
+
     @Transactional
     public UsuarioDto cadastrar(UsuarioFormDto usuarioFormDto) {
         Usuario usuario = modelMapper.map(usuarioFormDto, Usuario.class);
@@ -29,5 +37,9 @@ public class UsuarioService {
 
         usuarioRepository.save(usuario);
         return modelMapper.map(usuario, UsuarioDto.class);
+    }
+
+    public void remover(Long id) {
+        usuarioRepository.deleteById(id);
     }
 }
