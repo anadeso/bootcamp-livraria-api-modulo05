@@ -75,49 +75,56 @@ public class LivroRepositoryTest {
             "Aprenda Java em 21 dias",
                 LocalDate.now(),
                 100,
-                autor1);
+                autor1,
+                null);
         em.persist(l1);
 
         Livro l2 = new Livro(
                 "Como ser mais produtivo ",
                 LocalDate.now(),
                 100,
-                autor2);
+                autor2,
+                null);
         em.persist(l2);
 
         Livro l3 = new Livro(
                 "Aprenda a falar em público",
                 LocalDate.now(),
                 202,
-                autor3);
+                autor3,
+                null);
         em.persist(l3);
 
         Livro l4 = new Livro(
                 "Otimizando seu tempo",
                 LocalDate.now(),
                 150,
-                autor2);
+                autor2,
+                null);
         em.persist(l4);
 
         Livro l5 = new Livro(
                 "Como fazer bolos incrívei",
                 LocalDate.now(),
                 130,
-                autor4);
+                autor4,
+                null);
         em.persist(l5);
 
         Livro l6 = new Livro(
                 "Investindo em ações na bolda de valores",
                 LocalDate.now(),
                 120,
-                autor5);
+                autor5,
+                null);
         em.persist(l6);
 
         Livro l7 = new Livro(
                 "Aprenda Python em 12 dias",
                 LocalDate.now(),
                 110,
-                autor1);
+                autor1,
+                null);
         em.persist(l7);
 
         List<ItemAutorDto> itemAutorDtos = repository.relatorioAutorLivros();

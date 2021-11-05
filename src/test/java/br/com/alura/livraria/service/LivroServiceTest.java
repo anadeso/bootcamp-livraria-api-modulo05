@@ -33,7 +33,8 @@ public class LivroServiceTest {
                 "Testando nome livro",
                 LocalDate.now(),
                 100,
-                1l);
+                1l,
+                null);
 
 
         LivroDto dto = livroService.cadastrar(livroFormDto);
@@ -51,7 +52,8 @@ public class LivroServiceTest {
                 "Testando nome livro",
                 LocalDate.now(),
                 100,
-                99999999l);
+                99999999l,
+                null);
 
         Mockito.when(autorRepository.getById(livroFormDto.getAutorId()))
                 .thenThrow(EntityNotFoundException.class);

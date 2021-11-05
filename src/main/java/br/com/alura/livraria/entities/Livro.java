@@ -34,11 +34,16 @@ public class Livro {
     @JoinColumn(name = "autor_id")
     private Autor autor;
 
-    public Livro(String titulo, LocalDate dataLancamento, Integer numeroPagina, Autor autor) {
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
+
+    public Livro(String titulo, LocalDate dataLancamento, Integer numeroPagina, Autor autor, Usuario usuario) {
         this.titulo = titulo;
         this.dataLancamento = dataLancamento;
         this.numeroPagina = numeroPagina;
         this.autor = autor;
+        this.usuario = usuario;
     }
 
     public void atualizarInformacoes(String titulo, LocalDate dataLancamento, int numeroPagina) {

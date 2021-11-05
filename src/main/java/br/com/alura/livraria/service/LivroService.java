@@ -7,10 +7,13 @@ import br.com.alura.livraria.dto.LivroFormDto;
 import br.com.alura.livraria.entities.Autor;
 import br.com.alura.livraria.entities.Livro;
 
+import br.com.alura.livraria.entities.Usuario;
 import br.com.alura.livraria.repositories.AutorRepository;
 import br.com.alura.livraria.repositories.LivroRepository;
+import br.com.alura.livraria.repositories.UsuarioRepository;
 import org.modelmapper.ModelMapper;
 
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +31,9 @@ public class LivroService {
     @Autowired
     private AutorRepository autorRepository;
 
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
     private ModelMapper modelMapper = new ModelMapper();
 
     @Transactional(readOnly = true)
@@ -38,14 +44,18 @@ public class LivroService {
 
     @Transactional
     public LivroDto cadastrar(LivroFormDto livroFormDto) {
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         Livro livro = modelMapper.map(livroFormDto, Livro.class);
         Long autorId = livroFormDto.getAutorId();
+        Long usuarioId = livroFormDto.getUsuarioId();
 
         try {
             Autor autor = autorRepository.getById(autorId);
+            Usuario usuario = usuarioRepository.getById(usuarioId);
 
             livro.setId(null);
             livro.setAutor(autor);
+            livro.setUsuario(usuario);
 
             livroRepository.save(livro);
 
