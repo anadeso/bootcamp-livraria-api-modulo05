@@ -17,6 +17,7 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,13 +38,13 @@ public class LivroService {
     private ModelMapper modelMapper = new ModelMapper();
 
     @Transactional(readOnly = true)
-    public Page<LivroDto> listar(Pageable paginacao) {
-        Page<Livro> livros = livroRepository.findAll(paginacao);
+    public Page<LivroDto> listar(Pageable paginacao, Usuario usuario) {
+        Page<Livro> livros = livroRepository.findAllByUsuario(paginacao, usuario);
         return livros.map(x -> modelMapper.map(x, LivroDto.class));
     }
 
     @Transactional
-    public LivroDto cadastrar(LivroFormDto livroFormDto) {
+    public LivroDto cadastrar(LivroFormDto livroFormDto, Usuario logado) {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         Livro livro = modelMapper.map(livroFormDto, Livro.class);
         Long autorId = livroFormDto.getAutorId();
@@ -52,6 +53,10 @@ public class LivroService {
         try {
             Autor autor = autorRepository.getById(autorId);
             Usuario usuario = usuarioRepository.getById(usuarioId);
+
+            if (!usuario.equals(logado)) {
+                return lancarErroAcessoNegado();
+            }
 
             livro.setId(null);
             livro.setAutor(autor);
@@ -66,22 +71,41 @@ public class LivroService {
     }
 
     @Transactional
-    public LivroDto atualizar(AtualizacaoLivroFormDto dto) {
+    public LivroDto atualizar(AtualizacaoLivroFormDto dto, Usuario logado) {
         Livro livro = livroRepository.getById(dto.getId());
+
+        if (!livro.pertenceAoUsuario(logado)) {
+            return lancarErroAcessoNegado();
+        }
 
         livro.atualizarInformacoes(dto.getTitulo(), dto.getDataLancamento(), dto.getNumeroPagina());
         return modelMapper.map(livro, LivroDto.class);
     }
 
     @Transactional
-    public void remover(Long id) {
+    public void remover(Long id, Usuario logado) {
+        Livro livro = livroRepository.getById(id);
+
+        if (!livro.pertenceAoUsuario(logado)) {
+            lancarErroAcessoNegado();
+        }
+
         livroRepository.deleteById(id);
     }
 
-    public LivroDto listarPorId(Long id) {
+    public LivroDto listarPorId(Long id, Usuario logado) {
         Livro livro = livroRepository
                 .findById(id)
                 .orElseThrow(() -> new EntityNotFoundException());
+
+        if (!livro.pertenceAoUsuario(logado)) {
+            lancarErroAcessoNegado();
+        }
+
         return modelMapper.map(livro, LivroDto.class);
+    }
+
+    private LivroDto lancarErroAcessoNegado() {
+        throw new AccessDeniedException("Acesso negado!");
     }
 }

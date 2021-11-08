@@ -37,7 +37,7 @@ public class LivroServiceTest {
                 null);
 
 
-        LivroDto dto = livroService.cadastrar(livroFormDto);
+        LivroDto dto = livroService.cadastrar(livroFormDto, null);
 
         //Mockito.verify(livroRepository.save(Mockito.any()));
 
@@ -59,6 +59,6 @@ public class LivroServiceTest {
                 .thenThrow(EntityNotFoundException.class);
 
         Assertions.assertThrows(IllegalArgumentException.class,
-                () -> livroService.cadastrar(livroFormDto));
+                () -> livroService.cadastrar(livroFormDto, null));
     }
 }
