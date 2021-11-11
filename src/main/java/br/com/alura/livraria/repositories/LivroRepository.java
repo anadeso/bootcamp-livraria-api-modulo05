@@ -2,9 +2,6 @@ package br.com.alura.livraria.repositories;
 
 import br.com.alura.livraria.dto.ItemAutorDto;
 import br.com.alura.livraria.entities.Livro;
-import br.com.alura.livraria.entities.Usuario;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -23,7 +20,5 @@ public interface LivroRepository extends JpaRepository<Livro, Long> {
             "on a.id = l.autor " +
             "group by a.nome ")
     List<ItemAutorDto> relatorioAutorLivros();
-
-    Page<Livro> findAllByUsuario(Pageable paginacao, Usuario usuario);
 }
 

@@ -2,9 +2,11 @@ package br.com.alura.livraria.service;
 
 import br.com.alura.livraria.dto.LivroDto;
 import br.com.alura.livraria.dto.LivroFormDto;
+import br.com.alura.livraria.entities.Usuario;
 import br.com.alura.livraria.repositories.AutorRepository;
 import br.com.alura.livraria.repositories.LivroRepository;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,6 +29,13 @@ public class LivroServiceTest {
     @InjectMocks
     private LivroService livroService;
 
+    private Usuario logado;
+
+    @BeforeEach
+    public void before() {
+        this.logado = new Usuario("Rodrigo", "rodrigo", "123455");
+    }
+
     @Test
     void deveriaCadastrarUmLivro() {
         LivroFormDto livroFormDto = new LivroFormDto(
@@ -36,8 +45,7 @@ public class LivroServiceTest {
                 1l,
                 null);
 
-
-        LivroDto dto = livroService.cadastrar(livroFormDto, null);
+        LivroDto dto = livroService.cadastrar(livroFormDto);
 
         //Mockito.verify(livroRepository.save(Mockito.any()));
 
@@ -59,6 +67,6 @@ public class LivroServiceTest {
                 .thenThrow(EntityNotFoundException.class);
 
         Assertions.assertThrows(IllegalArgumentException.class,
-                () -> livroService.cadastrar(livroFormDto, null));
+                () -> livroService.cadastrar(livroFormDto));
     }
 }

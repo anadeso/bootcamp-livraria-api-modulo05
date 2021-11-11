@@ -6,7 +6,14 @@ import lombok.ToString;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Column;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
 
 import java.time.LocalDate;
 
@@ -34,25 +41,16 @@ public class Livro {
     @JoinColumn(name = "autor_id")
     private Autor autor;
 
-    @ManyToOne
-    @JoinColumn(name = "usuario_id")
-    private Usuario usuario;
-
-    public Livro(String titulo, LocalDate dataLancamento, Integer numeroPagina, Autor autor, Usuario usuario) {
+    public Livro(String titulo, LocalDate dataLancamento, Integer numeroPagina, Autor autor) {
         this.titulo = titulo;
         this.dataLancamento = dataLancamento;
         this.numeroPagina = numeroPagina;
         this.autor = autor;
-        this.usuario = usuario;
     }
 
     public void atualizarInformacoes(String titulo, LocalDate dataLancamento, int numeroPagina) {
         this.titulo = titulo;
         this.dataLancamento = dataLancamento;
         this.numeroPagina = numeroPagina;
-    }
-
-    public boolean pertenceAoUsuario(Usuario usuario) {
-        return this.usuario.equals(usuario);
     }
 }

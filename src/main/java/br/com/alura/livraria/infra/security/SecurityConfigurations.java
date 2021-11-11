@@ -61,12 +61,12 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
     }
 
     /**
-     * rodrigo 534870
-     * rafaela 867470
-     * fulano 533721
+     * rodrigo 501065
+     * rafaela 240063
+     * rita 805065
      */
 
     public static void main(String[] args) {
-        System.out.println(new BCryptPasswordEncoder().encode("533721"));
+        System.out.println(new BCryptPasswordEncoder().encode("805065"));
     }
 }
